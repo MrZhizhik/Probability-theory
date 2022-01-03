@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Теория вероятностей</title>
+    <style>
+        *, *::before, *::after {
+        box-sizing: border-box;
+        font-family: 'Roboto', sans-serif;
+        }
+        .container {
+            width: 930px;
+            margin: 20px auto;
+        }
+        .content {
+            height: 680px;
+            border-radius: 10px;
+            background-color: rgb(162, 225, 235);
+            padding: 16px;
+        }
+        .text-field__input {
+            display: block ;
+            margin: 0 auto 30px auto;
+            text-align:center;
+            width: 60%;
+            height: 35px;
+            border-radius:5px;
+            outline: none;
+            border: none;
+            font-family: 'Roboto', sans-serif;
+        }
+        input:hover {
+            cursor: pointer;
+        }
+        button {
+            display: block;
+            padding:15px;
+            border:none;
+            background-color:#3F51B5;
+            color:#fff;
+            font-weight:600;
+            border-radius:5px;
+            width: 200px;
+            margin: 20px auto;
+            font-family: 'Roboto', sans-serif;
+            transition: all .5s;
+        }
+        button:hover {
+            cursor: pointer;
+            background-color:rgb(64, 181, 146);
+        }
+        .blok__res, .blok__res_2{
+            width: 200px;
+            height: 50px;
+            margin: 0 70px;
+            background-color: #fff;
+            text-align: center;
+            color: black;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .title__res, .title__res_2 {
+            margin: 10px auto 10px auto;
+            text-align: center;
+            font-weight: bold;
+            width: 260px;
+        }
+        .title__iterazi {
+            margin: 0 auto 10px auto;
+            text-align: center;
+            font-weight: bold;
+        }
+        .content__text {
+            text-align: center;
+            line-height: 1.5;
+            width: 890px;
+        }
+        .bloci {
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1 class="title__iterazi">Задача</h1>
+            <div class="content__text"> 
+                Дан эллипс с произвольной малой и большой полуокружностью и 3 произвольные точки по периметру элипса. Точки образуют вершины вписанного треугольника.
+                Посчитать вероятность того, что центр эллипса будет внутри треугольника.
+            </div>
+            <h2 class="title__res">Симуляция</h2>
+            <div class="title__iterazi">Количетво итераций</div>
+            <input class="text-field__input" type="text" placeholder="Количетво итераций" id="iterazi">
+            <div class="title__res">Большая полуокружность</div>
+            <input class="text-field__input" type="text" placeholder="Большая полуокружность" id="a_poluos">
+            <div class="title__res">Малая полуокружности</div>
+            <input class="text-field__input" type="text" placeholder="Малая полуокружности" id="b_poluos">
+            <button onclick="func()">Посчитать</button>
+            <div class="bloci">
+                <div class="bloc_1">
+                    <div class="title__res">Вероятность перекрытия центра эллипса</div>
+                <div class="blok__res">
+                    <div id="res"></div>
+                </div>
+                </div>
+                <div class="bloc_2">
+                    <div class="title__res_2">Вероятность остроугольности вписанного треугольника</div>
+                <div class="blok__res_2">
+                    <div id="res_2"></div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        var rndPoint = function(a_poluos, b_poluos) {
+            
+        // var t1 = Math.random() * (2*Math.PI);
+        var tag = Math.random() * (2*Math.PI);
+        // var tag = Math.atan2((a_poluos * Math.sin(t1)) , (b_poluos * Math.cos(t1))  ); 
+
+        var x = a_poluos * Math.cos(tag);
+
+        var y = b_poluos * Math.sin(tag);
+
+        return {x, y};
+        }
+
+
+
+        var testInbound = function(a,b,c) {
+            var x = (a.x - 0) * (b.y - a.y) - (b.x - a.x) * (a.y - 0);
+            var y = (b.x - 0) * (c.y - b.y) - (c.x - b.x) * (b.y - 0);
+            var z = (c.x - 0) * (a.y - c.y) - (a.x - c.x) * (c.y - 0);
+            if (x > 0 && y > 0 && z > 0 || x < 0 && y < 0 && z < 0) {
+                console.log(`yes `);
+                return true;
+            }
+            console.log(`no `);
+            return false;
+        }
+
+        function sqr(a) {
+            return a * a;
+        }
+            
+        function isTriangleObtuse(a, b, c) {
+                var a1 = Math.sqrt( sqr(b.x - a.x) + sqr(b.y - a.y) ),
+                    b1 = Math.sqrt( sqr(c.x - b.x)  + sqr(c.y - b.y) ),
+                    c1 = Math.sqrt( sqr(a.x - c.x)  + sqr(a.y - c.y) );
+            
+                var A = sqr(a1), B = sqr(b1), C = sqr(c1);
+            
+            return (b1*b1 + c1*c1 - a1*a1)/(2*b1*c1) < 1 && (b1*b1 + c1*c1 - a1*a1)/(2*b1*c1) > 0 &&
+                    (b1*b1 + a1*a1 - c1*c1)/(2*b1*a1) < 1 && (b1*b1 + a1*a1 - c1*c1)/(2*b1*a1) > 0 &&
+                    (a1*a1 + c1*c1 - b1*b1)/(2*a1*c1) < 1 && (a1*a1 + c1*c1 - b1*b1)/(2*a1*c1) > 0
+        }
+
+
+        var roundTest = function(a_poluos, b_poluos, cnt) {
+            var hit = 0;
+            for (i = cnt; i--;) {
+                var a = rndPoint(a_poluos, b_poluos), b = rndPoint(a_poluos, b_poluos), c = rndPoint(a_poluos, b_poluos);
+                hit += isTriangleObtuse(a, b, c);
+            }
+            return hit;
+        }
+
+
+        var roundTest_2 = function(a_poluos, b_poluos, cnt) {
+            var hit = 0;
+            for (i = cnt; i--;) {
+                var a = rndPoint(a_poluos, b_poluos), b = rndPoint(a_poluos, b_poluos), c = rndPoint(a_poluos, b_poluos);
+                hit += testInbound(a, b, c);
+            }
+            return hit;
+        }
+
+
+        function func() {
+
+        var cnt = Number(document.getElementById("iterazi").value);
+        var a_poluos = Number(document.getElementById("a_poluos").value);
+        var b_poluos = Number(document.getElementById("b_poluos").value);
+
+        var test = roundTest(a_poluos, b_poluos, cnt);
+        var test_2 = roundTest_2(a_poluos, b_poluos, cnt);
+        let result = 100*test/cnt;
+        let result_2 = 100*test_2/cnt;
+        document.getElementById("res").innerHTML = result+" %";
+        document.getElementById("res_2").innerHTML = result_2+" %";
+        }
+    </script>
+</body>
+</html>

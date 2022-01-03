@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Теория вероятностей</title>
+    <style>
+        *, *::before, *::after {
+        box-sizing: border-box;
+        font-family: 'Roboto', sans-serif;
+        }
+        .container {
+            width: 930px;
+            margin: 30px auto;
+        }
+        .content {
+            height: 600px;
+            border-radius: 10px;
+            background-color: rgb(162, 225, 235);
+            padding: 30px;
+        }
+        .text-field__input {
+            display: block ;
+            margin: 0 auto 30px auto;
+            text-align:center;
+            width: 60%;
+            height: 35px;
+            border-radius:5px;
+            outline: none;
+            border: none;
+            font-family: 'Roboto', sans-serif;
+        }
+        input:hover {
+            cursor: pointer;
+        }
+        button {
+            display: block;
+            padding:15px;
+            border:none;
+            background-color:#3F51B5;
+            color:#fff;
+            font-weight:600;
+            border-radius:5px;
+            width: 200px;
+            margin: 20px auto;
+            font-family: 'Roboto', sans-serif;
+        }
+        button:hover {
+            cursor: pointer;
+        }
+        .blok__res{
+            width: 200px;
+            height: 50px;
+            margin: 0 auto;
+            background-color: #fff;
+            text-align: center;
+            color: black;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .title__res {
+            margin: 30px auto 10px auto;
+            text-align: center;
+            font-weight: bold;
+        }
+        .title__iterazi {
+            margin: 0 auto 10px auto;
+            text-align: center;
+            font-weight: bold;
+        }
+        .content__text {
+            text-align: center;
+            line-height: 1.5;
+        }
+       </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1 class="title__iterazi">Задача</h1>
+            <div class="content__text"> 
+                Дана окружность и 3 произвольные точки на ней. Точки образуют вершины вписанного треугольника.
+                <br>Посчитать вероятность того, что центр окружности будет внутри треугольника.
+            </div>
+            <h2 class="title__res">Симуляция</h2>
+            <div class="title__iterazi">Количетво итераций</div>
+            <input class="text-field__input" type="text" placeholder="Количетво итераций" id="iterazi">
+            <div class="title__res">Радиус</div>
+            <input class="text-field__input" type="text" placeholder="Радиус окружности" id="radius">
+            <button onclick="func()">Посчитать</button>
+            <div class="title__res">Результат</div>
+            <div class="blok__res">
+                <div id="res"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var rndPoint = function(r) {
+
+        var a = Math.random()*(Math.PI * 2 - 0) + 0;
+        return {x : Math.cos(a) * r, y : Math.sin(a) * r};
+        }
+        var testInbound = function(a,b,c) {
+            var x = (a.x - 0) * (b.y - a.y) - (b.x - a.x) * (a.y - 0);
+            var y = (b.x - 0) * (c.y - b.y) - (c.x - b.x) * (b.y - 0);
+            var z = (c.x - 0) * (a.y - c.y) - (a.x - c.x) * (c.y - 0);
+            if (x > 0 && y > 0 && z > 0 || x < 0 && y < 0 && z < 0) return true;
+            return false;
+        }
+        var roundTest = function(radius, cnt) {
+            var hit = 0;
+            for (i = cnt; i--;) {
+                var a = rndPoint(radius), b = rndPoint(radius), c = rndPoint(radius);
+                hit += testInbound(a, b, c);
+            }
+            return hit;
+        }
+        function func() {
+        var cnt = Number(document.getElementById("iterazi").value);
+        var rad = Number(document.getElementById("radius").value);
+        var test = roundTest(rad, cnt);
+        let result = test/cnt;
+        document.getElementById("res").innerHTML = result+" %";
+        }
+    </script>
+</body>
+</html>
